@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-// import someFeatureReducer from './someFeature/reducer'
+// import someFeatureReducer from "./someFeature/reducer";
 
 function someFeatureReducer(state = 'hi', action) {
 	return state
