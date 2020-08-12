@@ -4,13 +4,13 @@ const API_URL = `https://codaisseur-coders-network.herokuapp.com`
 
 export function startLoadingPost() {
 	return {
-		type: 'FEED_STARTLOADINGPOST',
+		type: 'POST_STARTLOADING',
 	}
 }
 
 export function postFullyFetched(data) {
 	return {
-		type: 'FEED_POSTFULLYFETCHED',
+		type: 'POST_FULLYFETCHED',
 		payload: data,
 	}
 }
