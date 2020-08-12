@@ -4,12 +4,13 @@ const initialState = {
 	comments: [],
 }
 
-export default function feedSliceReducer(state = initialState, action) {
+export default function postpageSliceReducer(state = initialState, action) {
 	switch (action.type) {
 		case 'POST_STARTLOADING': {
 			return {
-				...state,
 				loading: true,
+				post: null,
+				comments: [],
 			}
 		}
 		case 'POST_FULLYFETCHED': {
