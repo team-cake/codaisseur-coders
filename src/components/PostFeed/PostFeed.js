@@ -1,46 +1,38 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+import React, { useEffect } from 'react'
 import moment from 'moment'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
+
+import { fetchNext5Posts } from '../../store/postfeed/actions'
+import {
+	selectFeedLoading,
+	selectFeedPosts,
+} from '../../store/postfeed/selectors'
 
 import './PostFeed.css'
 
-const API_URL = `https://codaisseur-coders-network.herokuapp.com`
+export default function PostFeed() {
+	const dispatch = useDispatch()
 
-export default function PostsFeed() {
-	const [data, setData] = useState({
-		loading: false,
-		posts: [],
-	})
-
-	async function fetchNext5Posts() {
-		setData({ ...data, loading: true })
-
-		const res = await axios.get(
-			`${API_URL}/posts?offset=${data.posts.length}&limit=5`
-		)
-
-		const morePosts = res.data.rows
-
-		setData({
-			loading: false,
-			posts: [...data.posts, ...morePosts],
-		})
-	}
+	const loading = useSelector(selectFeedLoading)
+	const posts = useSelector(selectFeedPosts)
 
 	useEffect(() => {
-		fetchNext5Posts()
-	}, [])
+		dispatch(fetchNext5Posts)
+	}, [dispatch])
 
 	return (
 		<div className='PostsFeed'>
 			<h2>Recent posts</h2>
-			{data.posts.map((post) => {
+			{posts.map((post) => {
 				return (
 					<div key={post.id}>
-						<h3>{post.title}</h3>
+						<Link to={`/post/${post.id}`}>
+							<h3>{post.title}</h3>
+						</Link>
 						<p className='meta'>
 							{moment(post.createdAt).format('DD-MM-YYYY')} &bull;{' '}
-							{/* {post.post_likes.length} likes &bull;{" "} */}
+							{/* {post.post_likes.length} likes &bull;{' '} */}
 							<span className='tags'>
 								{post.tags.map((tag) => {
 									return (
@@ -55,10 +47,10 @@ export default function PostsFeed() {
 				)
 			})}
 			<p>
-				{data.loading ? (
+				{loading ? (
 					<em>Loading...</em>
 				) : (
-					<button onClick={fetchNext5Posts}>Load more</button>
+					<button onClick={() => dispatch(fetchNext5Posts)}>Load more</button>
 				)}
 			</p>
 		</div>
