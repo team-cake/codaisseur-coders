@@ -42,6 +42,24 @@ export default function PostPage() {
 					<ReactMarkdown source={postData.post.content} />
 
 					<h2>Comments</h2>
+					{postData.comments.rows.length === 0 ? (
+						<p>
+							<em>No comments left behind yet :(</em>
+						</p>
+					) : (
+						postData.comments.rows.map((comment) => {
+							return (
+								<div key={comment.id}>
+									<p>{comment.text}</p>
+									<p className='meta'>
+										By <strong>{comment.developer.name}</strong> &bull;{' '}
+										{moment(comment.createdAt).format('DD-MM-YYYY')}{' '}
+									</p>
+									<br />
+								</div>
+							)
+						})
+					)}
 				</>
 			)}
 		</div>
