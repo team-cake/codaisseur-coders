@@ -1,5 +1,5 @@
 const initialState = {
-	// me: null, // the logged-in user
+	me: null, // the logged-in user
 	jwt: null,
 }
 
@@ -9,11 +9,10 @@ export default (state = initialState, action) => {
 			console.log('step 7: login case')
 			return { ...state, jwt: action.payload }
 
-		case 'PROFILE':
+		case 'USERLOGGEDIN':
 			return {
 				...state,
-				name: action.payload.name,
-				profileImage: action.payload.image,
+				...action.payload,
 			}
 
 		case 'LOGOUT':
