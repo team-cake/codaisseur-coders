@@ -10,16 +10,16 @@ export function login(email, password) {
 				`https://codaisseur-coders-network.herokuapp.com/login`,
 				{ email, password }
 			)
-			window.localStorage.setItem('jwt', JSON.stringify(response.data.jwt))
-			dispatch({ type: 'LOGIN', payload: response.data.jwt })
-
 			const meProfile = await axios.get(
 				`https://codaisseur-coders-network.herokuapp.com/me`,
 				{ headers: { Authorization: `Bearer ${response.data.jwt}` } }
 			)
+
+			dispatch({ type: 'LOGIN', payload: response.data.jwt })
+			localStorage.setItem('jwt', response.data.jwt)
 			dispatch({ type: 'USERLOGGEDIN', payload: meProfile.data })
 
-			console.log('local', localStorage)
+			// console.log('local', localStorage)
 			// console.log('my profile', meProfile.data)
 			// console.log('what is email', email)
 			// console.log('what is password', password)
@@ -32,9 +32,25 @@ export function login(email, password) {
 	}
 }
 
-// export function bootstrapLoginState() {
-// 	return async function thunk(dispatch, getState) {
-// 		const getToken = await axios.get(localStorage.getItem('jwt'))
-// 		console.log('tokkie', getToken)
-// 	}
-// }
+export function bootstrapLoginState() {
+	return async function thunk(dispatch, getState) {
+		const getToken = localStorage.getItem('jwt')
+		console.log('thunk -> getToken', getToken)
+
+		const meProfile = await axios.get(
+			`https://codaisseur-coders-network.herokuapp.com/me`,
+			{ headers: { Authorization: `Bearer ${getToken}` } }
+		)
+		console.log('thunk -> me', meProfile)
+		const profileWithToken = {
+			profile: meProfile.data,
+			jwt: getToken,
+		}
+		dispatch({ type: 'USERLOGGEDIN', profileWithToken })
+	}
+}
+
+export function logout(dispatch, getState) {
+	dispatch({ type: 'LOGOUT' })
+	localStorage.removeItem('jwt')
+}
